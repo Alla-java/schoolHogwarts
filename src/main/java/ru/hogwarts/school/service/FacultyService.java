@@ -3,12 +3,10 @@ package ru.hogwarts.school.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,5 +64,15 @@ public class FacultyService {
                 .stream()
                 .filter(faculty -> faculty.getColor().equalsIgnoreCase(color))
                 .collect(Collectors.toList());
+    }
+
+    // Метод для поиска факультетов по имени или цвету с игнорированием регистра
+    public List<Faculty> searchFacultiesByNameOrColor(String searchTerm) {
+        return facultyRepository.findByNameIgnoreCaseContainingOrColorIgnoreCaseContaining(searchTerm, searchTerm);
+    }
+
+    // Метод для получения студентов факультета
+    public List<Student> getFacultyStudents(Long facultyId) {
+        return facultyRepository.findStudentsByFacultyId(facultyId);
     }
 }

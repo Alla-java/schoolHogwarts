@@ -2,9 +2,9 @@ package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -65,5 +65,16 @@ public class StudentService {
                 .stream()
                 .filter(student -> student.getAge() == age)
                 .collect(Collectors.toList());
+    }
+
+    // Метод для получения всех студентов, которые в диапазоне по возрасту
+    public List<Student> getStudentsByAgeRange(int minAge, int maxAge) {
+        return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    // Метод для получения факультета студента
+    public Faculty getStudentFaculty(Long studentId) {
+        return studentRepository.findByStudents_Id(studentId)
+                .orElseThrow(() -> new RuntimeException("Faculty not found for student ID " + studentId));
     }
 }
