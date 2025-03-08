@@ -2,11 +2,11 @@ package ru.hogwarts.school.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.StudentService;
 import ru.hogwarts.school.model.Student;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/student")
@@ -56,5 +56,17 @@ public class StudentController {
     @GetMapping("/age/{age}")
     public List<Student> getStudentsByAge(@RequestParam int age) {
         return studentService.getStudentsByAge(age);
+    }
+
+    // Эндпоинт для фильтрации студентов по возрасту
+    @GetMapping("/age/range")
+    public List<Student> getStudentsByAgeRange(@RequestParam int min, @RequestParam int max) {
+        return studentService.getStudentsByAgeRange(min, max);
+    }
+
+    // Эндпоинт для получения факультета студента по его ID
+    @GetMapping("/{id}/faculty")
+    public Faculty getStudentFaculty(@PathVariable Long id) {
+        return studentService.getStudentFaculty(id);
     }
 }
