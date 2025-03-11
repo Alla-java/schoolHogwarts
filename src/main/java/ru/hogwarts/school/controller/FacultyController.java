@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/faculty")
@@ -64,5 +64,17 @@ public class FacultyController {
     @GetMapping("/color/{color}")
     public List<Faculty> getFacultiesByColor(@RequestParam String color) {
         return facultyService.getFacultiesByColor(color);
+    }
+
+    // Эндпоинт для поиска факультета по имени или цвету, игнорируя регистр
+    @GetMapping("/search")
+    public List<Faculty> searchFaculties(@RequestParam String searchTerm) {
+        return facultyService.searchFacultiesByNameOrColor(searchTerm);
+    }
+
+    // Эндпоинт для получения студентов факультета по ID факультета
+    @GetMapping("/{id}/students")
+    public List<Student> getFacultyStudents(@PathVariable Long id) {
+        return facultyService.getFacultyStudents(id);
     }
 }
