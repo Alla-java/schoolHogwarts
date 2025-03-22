@@ -14,7 +14,6 @@ public interface FacultyRepository extends JpaRepository<Faculty, Long> {
     List<Faculty> findByNameIgnoreCaseContainingOrColorIgnoreCaseContaining(String name, String color);
 
     // Метод для поиска студентов по ID факультета
-    //List<Student> findStudentsByFacultyId(Long facultyId);
     List<Student> findStudentsById(Long id);
 
 }
