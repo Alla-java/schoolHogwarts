@@ -73,6 +73,6 @@ public class FacultyService {
 
     // Метод для получения студентов факультета
     public List<Student> getFacultyStudents(Long facultyId) {
-        return facultyRepository.findStudentsByFacultyId(facultyId);
+        return facultyRepository.findStudentsById(facultyId);
     }
 }

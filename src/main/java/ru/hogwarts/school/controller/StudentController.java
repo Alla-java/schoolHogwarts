@@ -54,7 +54,7 @@ public class StudentController {
 
     // Эндпоинт для фильтрации студентов по возрасту
     @GetMapping("/age/{age}")
-    public List<Student> getStudentsByAge(@RequestParam int age) {
+    public List<Student> getStudentsByAge(@PathVariable int age) {
         return studentService.getStudentsByAge(age);
     }
 
