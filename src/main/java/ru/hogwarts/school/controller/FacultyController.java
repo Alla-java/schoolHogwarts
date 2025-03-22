@@ -62,7 +62,7 @@ public class FacultyController {
 
     // Эндпоинт для фильтрации факультетов по цвету
     @GetMapping("/color/{color}")
-    public List<Faculty> getFacultiesByColor(@RequestParam String color) {
+    public List<Faculty> getFacultiesByColor(@PathVariable String color) {
         return facultyService.getFacultiesByColor(color);
     }
 
@@ -71,6 +71,13 @@ public class FacultyController {
     public List<Faculty> searchFaculties(@RequestParam String searchTerm) {
         return facultyService.searchFacultiesByNameOrColor(searchTerm);
     }
+
+    //Эндпоинт для привязки студентов к факультету
+    @PostMapping("/{id}")
+    public void addStudentsInFaculty () {
+
+    }
+
 
     // Эндпоинт для получения студентов факультета по ID факультета
     @GetMapping("/{id}/students")

@@ -13,7 +13,7 @@ public class Faculty {
     private String name;
     private String color;
 
-    // Связь OneToMany с студентами
+    // Связь OneToMany со студентами
     @OneToMany(mappedBy = "faculty")
     private Set<Student> students;  // Факультет может иметь много студентов
 

@@ -1,9 +1,11 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.List;
@@ -13,11 +15,16 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
 
+    @Value("${avatars.dir.path}")
+    private String avatarsDir;
+
     private final StudentRepository studentRepository;
+    private final AvatarRepository avatarRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
+        this.avatarRepository = avatarRepository;
     }
 
     // Метод для создания нового студента
@@ -74,7 +81,7 @@ public class StudentService {
 
     // Метод для получения факультета студента
     public Faculty getStudentFaculty(Long studentId) {
-        return studentRepository.findByStudents_Id(studentId)
-                .orElseThrow(() -> new RuntimeException("Faculty not found for student ID " + studentId));
+       return studentRepository.findFacultyById(studentId)
+               .orElseThrow(() -> new RuntimeException("Faculty not found for student ID " + studentId));
     }
 }
