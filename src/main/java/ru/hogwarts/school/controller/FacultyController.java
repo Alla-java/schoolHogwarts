@@ -78,7 +78,6 @@ public class FacultyController {
 
     }
 
-
     // Эндпоинт для получения студентов факультета по ID факультета
     @GetMapping("/{id}/students")
     public List<Student> getFacultyStudents(@PathVariable Long id) {

@@ -18,12 +18,12 @@ public class StudentService {
     private String avatarsDir;
 
     private final StudentRepository studentRepository;
-    private final AvatarRepository avatarRepository;
+    //private final AvatarRepository avatarRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
-        this.avatarRepository = avatarRepository;
+        //this.avatarRepository = avatarRepository;
     }
 
     // Метод для создания нового студента
