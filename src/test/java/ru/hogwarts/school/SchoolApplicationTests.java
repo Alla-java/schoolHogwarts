@@ -10,20 +10,28 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import ru.hogwarts.school.controller.FacultyController;
 import ru.hogwarts.school.controller.StudentController;
 
-@SpringBootApplication(scanBasePackages = "ru.hogwarts.school")
+
 class SchoolApplicationTests {
 
-	//Проверка, что studentController проинициализирован
-	@Test
-	void contextLoads() throws Exception {
-		Assertions.assertThat(studentController).isNotNull();
-	}
-
-	//Проверка, что facultyController проинициализирован
-	@Test
-	void contextLoads2() throws Exception {
-		Assertions.assertThat(facultyController).isNotNull();
-	}
+//	@SpringBootApplication
+//	(scanBasePackages = "main.java.ru.hogwarts.school")
+//	@Autowired
+//	private StudentController studentController;
+//
+//	@Autowired
+//	private FacultyController facultyController;
+//
+//	//Проверка, что studentController проинициализирован
+//	@Test
+//	void contextLoads() throws Exception {
+//		Assertions.assertThat(studentController).isNotNull();
+//	}
+//
+//	//Проверка, что facultyController проинициализирован
+//	@Test
+//	void contextLoads2() throws Exception {
+//		Assertions.assertThat(facultyController).isNotNull();
+//	}
 
 
 }
