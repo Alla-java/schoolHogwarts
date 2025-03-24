@@ -191,6 +191,33 @@ public class StudentControllerWithMockTest {
     }
 
     @Test
+    public void testAssignFacultyToStudent() throws Exception {
+        Faculty faculty = new Faculty();
+        faculty.setId(1L);
+        faculty.setName("Гринвич");
+        faculty.setColor("красный");
+
+        Student student = new Student("Иван", 20);
+        student.setId(1L);
+        student.setFaculty(faculty);
+
+        // Мокаем поведение сервисов
+        when(studentService.assignFacultyToStudent(1L, 1L)).thenReturn(student);
+
+        // Выполнение запроса на привязку факультета к студенту
+        mockMvc.perform(put("/student/{studentId}/faculty/{facultyId}", 1L, 1L)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()) // Проверяем, что статус 200 OK
+                .andExpect(jsonPath("$.name").value("Иван"))
+                .andExpect(jsonPath("$.age").value(20))
+                .andExpect(jsonPath("$.faculty.name").value("Гринвич"))
+                .andExpect(jsonPath("$.faculty.id").value(1L));
+
+        // Проверка, что метод сервисного слоя был вызван один раз
+        verify(studentService, times(1)).assignFacultyToStudent(1L, 1L);
+    }
+
+    @Test
     public void testGetStudentFaculty() throws Exception {
         Faculty faculty = new Faculty("Гринвич", "желтый");
         when(studentService.getStudentFaculty(1L)).thenReturn(faculty);
