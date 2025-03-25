@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.StudentRepository;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +19,14 @@ public class StudentService {
     private String avatarsDir;
 
     private final StudentRepository studentRepository;
-    private final AvatarRepository avatarRepository;
+    private final FacultyRepository facultyRepository;
+    //private final AvatarRepository avatarRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, AvatarRepository avatarRepository) {
+    public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
         this.studentRepository = studentRepository;
-        this.avatarRepository = avatarRepository;
+        this.facultyRepository = facultyRepository;
+        //this.avatarRepository = avatarRepository;
     }
 
     // Метод для создания нового студента
@@ -77,6 +79,26 @@ public class StudentService {
     // Метод для получения всех студентов, которые в диапазоне по возрасту
     public List<Student> getStudentsByAgeRange(int minAge, int maxAge) {
         return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    // Метод для привязки студента к факультету
+    public Student assignFacultyToStudent(Long studentId, Long facultyId) {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            return null;  // Студент не найден
+        }
+
+        Faculty faculty = facultyRepository.findById(facultyId).orElse(null);
+
+        if (faculty == null) {
+            return null;  // Факультет не найден
+        }
+
+        // Привязываем факультет к студенту
+        student.setFaculty(faculty);
+
+        // Сохраняем обновленного студента
+        return studentRepository.save(student);
     }
 
     // Метод для получения факультета студента

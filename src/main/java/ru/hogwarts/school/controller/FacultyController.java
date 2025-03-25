@@ -72,13 +72,6 @@ public class FacultyController {
         return facultyService.searchFacultiesByNameOrColor(searchTerm);
     }
 
-    //Эндпоинт для привязки студентов к факультету
-    @PostMapping("/{id}")
-    public void addStudentsInFaculty () {
-
-    }
-
-
     // Эндпоинт для получения студентов факультета по ID факультета
     @GetMapping("/{id}/students")
     public List<Student> getFacultyStudents(@PathVariable Long id) {

@@ -1,6 +1,7 @@
 package ru.hogwarts.school.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.service.StudentService;
@@ -62,6 +63,21 @@ public class StudentController {
     @GetMapping("/age/range")
     public List<Student> getStudentsByAgeRange(@RequestParam int min, @RequestParam int max) {
         return studentService.getStudentsByAgeRange(min, max);
+    }
+
+    //Эндпоинт для привязки студента к факультету
+    @PutMapping("/{studentId}/faculty/{facultyId}")
+    public ResponseEntity<Student> assignFacultyToStudent(
+            @PathVariable Long studentId,
+            @PathVariable Long facultyId) {
+
+        Student updatedStudent = studentService.assignFacultyToStudent(studentId, facultyId);
+
+        if (updatedStudent != null) {
+            return ResponseEntity.ok(updatedStudent);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Эндпоинт для получения факультета студента по его ID
