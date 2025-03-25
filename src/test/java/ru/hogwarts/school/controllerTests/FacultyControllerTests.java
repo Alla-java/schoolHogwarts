@@ -155,38 +155,35 @@ public class FacultyControllerTests {
         assertTrue(faculties.stream().anyMatch(f -> f.getName().equals("Гринвич"))); // Проверяем, что имя совпадает
     }
 
-//    @Test
-//    public void testGetFacultyStudents() {
-//        // Создаем два студента для теста
-//        Student newStudent1 = new Student("Иван Иванов", 20);
-//        Student newStudent2 = new Student("Иван Фролов", 25);
-//
-//        // Сохраняем студентов в репозитории
-//        newStudent1 = restTemplate.exchange(
-//                "/student", HttpMethod.POST, new HttpEntity<>(newStudent1), Student.class).getBody();
-//        newStudent2 = restTemplate.exchange(
-//                "/student", HttpMethod.POST, new HttpEntity<>(newStudent2), Student.class).getBody();
-//
-//        // Создаем факультет для теста
-//        Faculty faculty = new Faculty("Гринвич", "зеленый");
-//        faculty = restTemplate.exchange(
-//                "/faculty", HttpMethod.POST, new HttpEntity<>(faculty), Faculty.class).getBody();
-//
-//        // Привязываем студентов к факультету
-//        restTemplate.exchange(
-//                "/student/" + newStudent1.getId() + "/faculty/" + faculty.getId(), HttpMethod.PUT, null, Student.class);
-//        restTemplate.exchange(
-//                "/student/" + newStudent2.getId() + "/faculty/" + faculty.getId(), HttpMethod.PUT, null, Student.class);
-//
-//        // Получаем студентов факультета по ID
-//        ResponseEntity<List<Student>> response = restTemplate.exchange(
-//                "/faculty/" + faculty.getId() + "/students", HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
-//
-//        assertEquals(HttpStatus.OK, response.getStatusCode());
-//        List<Student> students = response.getBody();
-//        assertNotNull(students); // Проверяем, что список студентов не пуст
-//        assertTrue(students.stream().anyMatch(s -> s.getName().equals("Иван Иванов")));
-//        assertTrue(students.stream().anyMatch(s -> s.getName().equals("Иван Фролов")));
-//    }
+    @Test
+    public void testGetFacultyStudents() {
+        Student newStudent1 = new Student("Иван Иванов", 20);
+        Student newStudent2 = new Student("Иван Фролов", 25);
+
+        newStudent1 = restTemplate.exchange(
+                "/student", HttpMethod.POST, new HttpEntity<>(newStudent1), Student.class).getBody();
+        newStudent2 = restTemplate.exchange(
+                "/student", HttpMethod.POST, new HttpEntity<>(newStudent2), Student.class).getBody();
+
+        Faculty faculty = new Faculty("Гринвич", "зеленый");
+        faculty = restTemplate.exchange(
+                "/faculty", HttpMethod.POST, new HttpEntity<>(faculty), Faculty.class).getBody();
+
+        // Привязываем студентов к факультету
+        restTemplate.exchange(
+                "/student/" + newStudent1.getId() + "/faculty/" + faculty.getId(), HttpMethod.PUT, null, Student.class);
+        restTemplate.exchange(
+                "/student/" + newStudent2.getId() + "/faculty/" + faculty.getId(), HttpMethod.PUT, null, Student.class);
+
+        // Получаем студентов факультета по ID
+        ResponseEntity<List<Student>> response = restTemplate.exchange(
+                "/faculty/" + faculty.getId() + "/students", HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List<Student> students = response.getBody();
+        assertNotNull(students);
+        assertTrue(students.stream().anyMatch(s -> s.getName().equals("Иван Иванов")));
+        assertTrue(students.stream().anyMatch(s -> s.getName().equals("Иван Фролов")));
+    }
 }
 
