@@ -32,9 +32,6 @@ public class FacultyControllerWithMockTest {
     @MockBean
     private FacultyService facultyService;
 
-    @InjectMocks
-    private FacultyController facultyController;
-
     private ObjectMapper objectMapper;
 
     @BeforeEach
