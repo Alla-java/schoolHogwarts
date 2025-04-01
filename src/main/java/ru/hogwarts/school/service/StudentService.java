@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.repository.FacultyRepository;
 
@@ -20,13 +21,13 @@ public class StudentService {
 
     private final StudentRepository studentRepository;
     private final FacultyRepository facultyRepository;
-    //private final AvatarRepository avatarRepository;
+    private final AvatarRepository avatarRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
+    public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
         this.facultyRepository = facultyRepository;
-        //this.avatarRepository = avatarRepository;
+        this.avatarRepository = avatarRepository;
     }
 
     // Метод для создания нового студента
