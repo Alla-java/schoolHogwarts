@@ -28,6 +28,7 @@ StudentService {
     @Autowired
     public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
+        this.facultyRepository = facultyRepository;
         this.avatarRepository = avatarRepository;
         this.facultyRepository = facultyRepository;
     }

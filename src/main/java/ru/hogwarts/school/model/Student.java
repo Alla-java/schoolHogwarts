@@ -58,6 +58,10 @@ public class Student {
         this.faculty = faculty;
     }
 
+    public Faculty getFaculty() {
+        return faculty;
+    }
+
     @Override
     public String toString() {
         return "Student{id=" + id + ", name='" + name + "', age=" + age + "}";

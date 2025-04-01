@@ -19,8 +19,8 @@ public class AvatarController {
 
     private final AvatarService avatarService;
 
-    public AvatarController (AvatarService avatarServiceImpl) {
-        this.avatarService = avatarServiceImpl;
+    public AvatarController (AvatarService avatarService) {
+        this.avatarService = avatarService;
     }
 
     //Эндпоинт для загрузки картинки и в БД и на локальный диск
@@ -58,4 +58,3 @@ public class AvatarController {
         return ResponseEntity.notFound().build();
     }
 }
-
