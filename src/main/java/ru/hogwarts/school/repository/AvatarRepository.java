@@ -17,7 +17,4 @@ public interface AvatarRepository extends JpaRepository<Avatar, Long> {
     //Метод для получения аватара по ID
     Optional<Avatar> findById(Long id);
 
-    //Метод с пагинацией для получения аватаров
-    Page<Avatar> findAll(Pageable pageable);
-
 }
