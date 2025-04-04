@@ -3,12 +3,14 @@ package ru.hogwarts.school.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.hogwarts.school.model.Avatar;
 import ru.hogwarts.school.repository.AvatarRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -70,5 +72,10 @@ public class AvatarService{
             return new FileSystemResource(path.toFile());
         }
         return null;
+    }
+
+    // Метод для получения аватаров с пагинацией
+    public Page<Avatar> getAvatarsPage(Pageable pageable) {
+        return avatarRepository.findAll(pageable);
     }
 }

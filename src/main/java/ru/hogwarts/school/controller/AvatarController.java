@@ -1,6 +1,9 @@
 package ru.hogwarts.school.controller;
 
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,5 +59,20 @@ public class AvatarController {
                     .body(resource);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    // Эндпоинт для получения списка аватарок постранично
+    @GetMapping
+    public ResponseEntity<Page<Avatar>> getAvatars(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
+        // Создаем объект Pageable с учетом параметров страницы и размера
+        Pageable pageable = PageRequest.of(page, size);
+
+        // Получаем пагинированный список аватаров
+        Page<Avatar> avatars = avatarService.getAvatarsPage(pageable);
+
+        return ResponseEntity.ok(avatars);
     }
 }

@@ -2,6 +2,7 @@ package ru.hogwarts.school.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
@@ -9,6 +10,7 @@ import ru.hogwarts.school.repository.AvatarRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 import ru.hogwarts.school.repository.FacultyRepository;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,7 +30,6 @@ StudentService {
     @Autowired
     public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository, AvatarRepository avatarRepository) {
         this.studentRepository = studentRepository;
-        this.facultyRepository = facultyRepository;
         this.avatarRepository = avatarRepository;
         this.facultyRepository = facultyRepository;
     }
@@ -110,4 +111,23 @@ StudentService {
        return studentRepository.findFacultyById(studentId)
                .orElseThrow(() -> new RuntimeException("Faculty not found for student ID " + studentId));
     }
+
+    // Метод для получения количества всех студентов
+    public long getTotalStudents() {
+        return studentRepository.countAllStudents();
+    }
+
+    // Метод для получения среднего возраста студентов
+    public double getAverageAge() {
+        return studentRepository.findAverageAge();
+    }
+
+    // Метод для получения 5 последних студентов
+    public List<Student> getLastFiveStudents() {
+        Pageable pageable = (Pageable) PageRequest.of(0, 5);
+        return studentRepository.findTop5ByOrderByIdDesc(pageable);
+    }
+
+
+
 }
