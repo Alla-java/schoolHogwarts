@@ -122,4 +122,14 @@ public class FacultyService {
         logger.debug("Found {} students for facultyId = {}", students.size(), facultyId);
         return students;
     }
+
+    // Метод для получения самого длинного названия факультета
+    public String getLongestFacultyName() {
+        List<Faculty> faculties = facultyRepository.findAll();
+
+        return faculties.stream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElse("");
+    }
 }

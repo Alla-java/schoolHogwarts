@@ -77,4 +77,12 @@ public class FacultyController {
     public List<Student> getFacultyStudents(@PathVariable Long id) {
         return facultyService.getFacultyStudents(id);
     }
+
+    // Эндпоинт для получения самого длинного названия факультета
+    @GetMapping("/longest-name")
+    public String getLongestFacultyName() {
+        return facultyService.getLongestFacultyName();
+    }
+
+
 }

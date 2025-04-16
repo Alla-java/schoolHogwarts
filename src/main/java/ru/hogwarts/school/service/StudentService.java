@@ -168,14 +168,6 @@ public class StudentService {
         return count;
     }
 
-    // Метод для получения среднего возраста студентов
-    public double getAverageAge() {
-        logger.info("Was invoked method for get average student age");
-        double avg = studentRepository.findAverageAge();
-        logger.debug("Average student age = {}", avg);
-        return avg;
-    }
-
     // Метод для получения 5 последних студентов
     public List<Student> getLastFiveStudents() {
         logger.info("Was invoked method for get last five students");
@@ -183,5 +175,27 @@ public class StudentService {
         List<Student> students = studentRepository.findTop5ByOrderByIdDesc(pageable);
         logger.debug("Retrieved last five students, count = {}", students.size());
         return students;
+    }
+
+    // Метод для получения всех имен всех студентов, чье имя начинается с буквы А.
+    public List<String> getNamesStartingWithA() {
+        return studentRepository.findAll().stream()
+                .map(Student::getName)
+                .filter(name -> name != null && name.toUpperCase().startsWith("А")) // кириллическая "А"
+                .map(String::toUpperCase)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    //Метод для получения среднего возраста студентов с использованием метода findAll
+    public double getAverageAge() {
+        List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) {
+            return 0.0;
+        }
+        return students.stream()
+                .mapToInt(Student::getAge)
+                .average()
+                .orElse(0.0);
     }
 }
