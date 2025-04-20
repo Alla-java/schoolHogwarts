@@ -42,7 +42,7 @@ public class StudentControllerTests {
         Student newStudent = new Student("Иван Иванов", 25);
 
         ResponseEntity<Student> response = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(newStudent), Student.class);
+                "/students", HttpMethod.POST, new HttpEntity<>(newStudent), Student.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -59,7 +59,7 @@ public class StudentControllerTests {
 
         ResponseEntity<Student> response = restTemplate.exchange(
 
-                "/student/" + studentId, HttpMethod.GET, null, Student.class);
+                "/students/" + studentId, HttpMethod.GET, null, Student.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -70,18 +70,18 @@ public class StudentControllerTests {
     public void testGetAllStudents() {
         Student student1 = new Student("Иван Иванов", 20);
         student1 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student1), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student1), Student.class).getBody();
 
         Student student2 = new Student("Петр Петров", 20);
         student2 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student2), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student2), Student.class).getBody();
 
         Student student3 = new Student("Алексей Алексеев", 25);
         student3 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student3), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student3), Student.class).getBody();
 
         ResponseEntity<List<Student>> response = restTemplate.exchange(
-                "/student", HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
+                "/students", HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().size() > 0);
@@ -99,7 +99,7 @@ public class StudentControllerTests {
 
 
         ResponseEntity<Student> response = restTemplate.exchange(
-                "/student/" + studentId, HttpMethod.PUT, new HttpEntity<>(updatedStudent), Student.class);
+                "/students/" + studentId, HttpMethod.PUT, new HttpEntity<>(updatedStudent), Student.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -115,13 +115,13 @@ public class StudentControllerTests {
         Long studentId = newStudent.getId();
 
         ResponseEntity<Void> response = restTemplate.exchange(
-                "/student/" + studentId, HttpMethod.DELETE, null, Void.class);
+                "/students/" + studentId, HttpMethod.DELETE, null, Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Дополнительно можно проверить, что студента больше нет в системе
         ResponseEntity<Student> getResponse = restTemplate.exchange(
-                "/student/" + studentId, HttpMethod.GET, null, Student.class);
+                "/students/" + studentId, HttpMethod.GET, null, Student.class);
         assertEquals(HttpStatus.OK, getResponse.getStatusCode());
     }
 
@@ -129,11 +129,11 @@ public class StudentControllerTests {
     public void testGetStudentsByAge() {
         Student student1 = new Student("Иван Иванов", 20);
         student1 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student1), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student1), Student.class).getBody();
 
         Student student2 = new Student("Петр Петров", 20);
         student2 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student2), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student2), Student.class).getBody();
 
         Student student3 = new Student("Алексей Алексеев", 25);
         student3 = restTemplate.exchange(
@@ -141,7 +141,7 @@ public class StudentControllerTests {
 
         // Получаем всех студентов с возрастом 20
         ResponseEntity<List<Student>> response = restTemplate.exchange(
-                "/student/age/20", HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
+                "/students/age/20", HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         List<Student> students = response.getBody();
@@ -156,21 +156,21 @@ public class StudentControllerTests {
     public void testGetStudentsByAgeRange() {
         Student student1 = new Student("Иван Иванов", 20);
         student1 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student1), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student1), Student.class).getBody();
 
         Student student2 = new Student("Петр Петров", 20);
         student2 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student2), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student2), Student.class).getBody();
 
         Student student3 = new Student("Алексей Алексеев", 35);
         student3 = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student3), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student3), Student.class).getBody();
 
         int minAge = 20;
         int maxAge = 30;
 
         ResponseEntity<List<Student>> response = restTemplate.exchange(
-                "/student/age/range?min=" + minAge + "&max=" + maxAge, HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
+                "/students/age/range?min=" + minAge + "&max=" + maxAge, HttpMethod.GET, null, new ParameterizedTypeReference<List<Student>>() {});
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().size() > 0);
@@ -184,10 +184,10 @@ public class StudentControllerTests {
 
         Student student = new Student("Иван Иванов", 20);
         student = restTemplate.exchange(
-                "/student", HttpMethod.POST, new HttpEntity<>(student), Student.class).getBody();
+                "/students", HttpMethod.POST, new HttpEntity<>(student), Student.class).getBody();
 
         // Формируем URL для запроса (привязываем студента к факультету)
-        String url = UriComponentsBuilder.fromPath("/student/{studentId}/faculty/{facultyId}")
+        String url = UriComponentsBuilder.fromPath("/students/{studentId}/faculty/{facultyId}")
                 .buildAndExpand(student.getId(), faculty.getId())
                 .toUriString();
 
@@ -216,7 +216,7 @@ public class StudentControllerTests {
         newStudent = studentRepository.save(newStudent);
 
         ResponseEntity<Faculty> response = restTemplate.getForEntity(
-                "/student/" + newStudent.getId() + "/faculty", Faculty.class);
+                "/students/" + newStudent.getId() + "/faculty", Faculty.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());

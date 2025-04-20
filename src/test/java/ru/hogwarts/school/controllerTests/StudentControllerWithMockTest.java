@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.hogwarts.school.controller.StudentController;
 import ru.hogwarts.school.model.Faculty;
@@ -15,6 +15,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 import ru.hogwarts.school.service.StudentService;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -28,10 +29,10 @@ public class StudentControllerWithMockTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private StudentService studentService;
 
-    @MockBean
+    @MockitoBean
     private FacultyService facultyService;
 
     @InjectMocks
@@ -50,7 +51,7 @@ public class StudentControllerWithMockTest {
         Student student = new Student("Иван", 20);
         when(studentService.createStudent("Иван", 20)).thenReturn(student);
 
-        mockMvc.perform(post("/student")
+        mockMvc.perform(post("/students")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(student)))
                 .andExpect(status().isOk())
@@ -67,7 +68,7 @@ public class StudentControllerWithMockTest {
         student.setId(1L);
         when(studentService.getStudent(1L)).thenReturn(student);
 
-        mockMvc.perform(get("/student/{id}", 1L))
+        mockMvc.perform(get("/students/{id}", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Иван"))
                 .andExpect(jsonPath("$.age").value(20));
@@ -88,7 +89,7 @@ public class StudentControllerWithMockTest {
         when(studentService.getAllStudents()).thenReturn(List.of(student1, student2, student3));
 
         // Выполнение GET-запроса для получения всех студентов
-        mockMvc.perform(get("/student"))
+        mockMvc.perform(get("/students"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))  // Проверяем, что в ответе 3 студента
                 .andExpect(jsonPath("$[0].name").value("Иван"))   // Проверяем первого студента
@@ -109,7 +110,7 @@ public class StudentControllerWithMockTest {
         when(studentService.updateStudent(1L, "Иван Федоров", 22)).thenReturn(true);
         when(studentService.getStudent(1L)).thenReturn(updatedStudent);
 
-        mockMvc.perform(put("/student/{id}", 1L)
+        mockMvc.perform(put("/students/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updatedStudent)))
                 .andExpect(status().isOk())
@@ -127,7 +128,7 @@ public class StudentControllerWithMockTest {
         when(studentService.deleteStudent(1L)).thenReturn(true);
 
         // Выполнение запроса на удаление студента по ID
-        mockMvc.perform(delete("/student/{id}", 1L))
+        mockMvc.perform(delete("/students/{id}", 1L))
                 .andExpect(status().isOk());
 
         verify(studentService, times(1)).deleteStudent(1L);
@@ -146,7 +147,7 @@ public class StudentControllerWithMockTest {
         when(studentService.getStudentsByAge(20)).thenReturn(List.of(student1, student2));
 
         // Выполнение GET-запроса для получения студентов по возрасту
-        mockMvc.perform(get("/student/age/{age}", 20))
+        mockMvc.perform(get("/students/age/{age}", 20))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))  // Проверяем, что в ответе 2 студента с возрастом 20
                 .andExpect(jsonPath("$[0].name").value("Иван"))   // Проверяем первого студента
@@ -174,7 +175,7 @@ public class StudentControllerWithMockTest {
         when(studentService.getStudentsByAgeRange(20, 25)).thenReturn(List.of(student1, student2, student3));
 
         // Выполнение GET-запроса для получения студентов по возрастному диапазону
-        mockMvc.perform(get("/student/age/range")
+        mockMvc.perform(get("/students/age/range")
                         .param("min", "20")
                         .param("max", "25"))
                 .andExpect(status().isOk())
@@ -205,7 +206,7 @@ public class StudentControllerWithMockTest {
         when(studentService.assignFacultyToStudent(1L, 1L)).thenReturn(student);
 
         // Выполнение запроса на привязку факультета к студенту
-        mockMvc.perform(put("/student/{studentId}/faculty/{facultyId}", 1L, 1L)
+        mockMvc.perform(put("/students/{studentId}/faculty/{facultyId}", 1L, 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()) // Проверяем, что статус 200 OK
                 .andExpect(jsonPath("$.name").value("Иван"))
@@ -222,10 +223,53 @@ public class StudentControllerWithMockTest {
         Faculty faculty = new Faculty("Гринвич", "желтый");
         when(studentService.getStudentFaculty(1L)).thenReturn(faculty);
 
-        mockMvc.perform(get("/student/{id}/faculty", 1L))
+        mockMvc.perform(get("/students/{id}/faculty", 1L))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Гринвич"));
 
         verify(studentService, times(1)).getStudentFaculty(1L);
     }
+
+    @Test
+    public void testPrintStudentsInParallel() throws Exception {
+        // Замокированные студенты внутри теста
+        List<Student> students = Arrays.asList(
+                new Student("Иван Иванов", 20),
+                new Student("Алиса Федорова", 22),
+                new Student("Рон Уизли", 21),
+                new Student("Гермиона Грейнджер", 23),
+                new Student("Гарри Поттер", 24),
+                new Student("Давид Давидов", 25)
+        );
+
+        // Мокируем сервис, чтобы он возвращал замокированных студентов
+        when(studentService.getAllStudents()).thenReturn(students);
+
+        // Выполняем запрос и проверяем результат
+        mockMvc.perform(get("/students/print-parallel"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Printed 6 student names in parallel (check console)"));
+    }
+
+    @Test
+    public void testPrintStudentsSynchronized() throws Exception {
+        // Замокированные студенты внутри теста
+        List<Student> students = Arrays.asList(
+                new Student("Иван Иванов", 20),
+                new Student("Алиса Федорова", 22),
+                new Student("Рон Уизли", 21),
+                new Student("Гермиона Грейнджер", 23),
+                new Student("Гарри Поттер", 24),
+                new Student("Давид Давидов", 25)
+        );
+
+        // Мокируем сервис, чтобы он возвращал замокированных студентов
+        when(studentService.getAllStudents()).thenReturn(students);
+
+        // Выполняем запрос и проверяем результат
+        mockMvc.perform(get("/students/print-synchronized"))
+            .andExpect(status().isOk())
+            .andExpect(content().string("Printed 6 student names in synchronized mode (check console)"));
+       }
 }
+
