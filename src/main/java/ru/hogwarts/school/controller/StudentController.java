@@ -93,17 +93,24 @@ public class StudentController {
         return ResponseEntity.ok(count);
     }
 
-    // Эндпоинт для получения среднего возраста студентов
-    @GetMapping("/average-age")
-    public ResponseEntity<Double> getAverageAge() {
-        double averageAge = studentService.getAverageAge();
-        return ResponseEntity.ok(averageAge);
-    }
-
     // Эндпоинт для получения 5 последних студентов
     @GetMapping("/last-five")
     public ResponseEntity<List<Student>> getLastFiveStudents() {
         List<Student> students = studentService.getLastFiveStudents();
         return ResponseEntity.ok(students);
+    }
+
+    // Эндпоинт для получения всех имен всех студентов, чье имя начинается с буквы А
+    @GetMapping("/names-starting-with-a")
+    public ResponseEntity<List<String>> getNamesStartingWithA() {
+        List<String> names = studentService.getNamesStartingWithA();
+        return ResponseEntity.ok(names);
+    }
+
+    // Эндпоинт для получения среднего возраста студентов
+    @GetMapping("/average-age")
+    public ResponseEntity<Double> getAverageAge() {
+        double averageAge = studentService.getAverageAge();
+        return ResponseEntity.ok(averageAge);
     }
 }
