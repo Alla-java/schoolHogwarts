@@ -10,7 +10,7 @@ import ru.hogwarts.school.model.Student;
 import java.util.List;
 
 @RestController
-@RequestMapping("/student")
+@RequestMapping("/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -112,5 +112,77 @@ public class StudentController {
     public ResponseEntity<Double> getAverageAge() {
         double averageAge = studentService.getAverageAge();
         return ResponseEntity.ok(averageAge);
+    }
+
+    // Эндпоинт для вывода в консоль имен всех студентов в параллельном режиме
+    @GetMapping("/print-parallel")
+    public String printStudentsInParallel() {
+        List<Student> students = studentService.getAllStudents();
+
+        if (students.size() < 6) {
+            return "Not enough students (minimum 6 required)";
+        }
+
+        // Первые два имени — основной поток
+        System.out.println("Main Thread:");
+        System.out.println(students.get(0).getName());
+        System.out.println(students.get(1).getName());
+
+        // Поток 1 — 3-й и 4-й студенты
+        Thread thread1 = new Thread(() -> {
+            System.out.println("Thread 1:");
+            System.out.println(students.get(2).getName());
+            System.out.println(students.get(3).getName());
+        });
+
+        // Поток 2 — 5-й и 6-й студенты
+        Thread thread2 = new Thread(() -> {
+            System.out.println("Thread 2:");
+            System.out.println(students.get(4).getName());
+            System.out.println(students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        return "Printed 6 student names in parallel (check console)";
+    }
+
+    // Синхронизированный метод для вывода имени студента
+    private synchronized void printStudentName(String name) {
+        System.out.println(name);
+    }
+
+    @GetMapping("/print-synchronized")
+    public String printStudentsSynchronized() {
+        List<Student> students = studentService.getAllStudents();
+
+        if (students.size() < 6) {
+            return "Not enough students (minimum 6 required)";
+        }
+
+        // Первые два имени — основной поток
+        System.out.println("Main Thread:");
+        printStudentName(students.get(0).getName());
+        printStudentName(students.get(1).getName());
+
+        // Поток 1 — 3-й и 4-й студенты
+        Thread thread1 = new Thread(() -> {
+            System.out.println("Thread 1:");
+            printStudentName(students.get(2).getName());
+            printStudentName(students.get(3).getName());
+        });
+
+        // Поток 2 — 5-й и 6-й студенты
+        Thread thread2 = new Thread(() -> {
+            System.out.println("Thread 2:");
+            printStudentName(students.get(4).getName());
+            printStudentName(students.get(5).getName());
+        });
+
+        thread1.start();
+        thread2.start();
+
+        return "Printed 6 student names in synchronized mode (check console)";
     }
 }
